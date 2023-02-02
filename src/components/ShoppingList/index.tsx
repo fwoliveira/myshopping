@@ -25,19 +25,63 @@ export function ShoppingList() {
   //    .catch(error => console.error(error))
   // },[])
   
+  // useEffect(()=>{
+  //  const subscribe = firestore()
+  //   .collection('products')
+  //    .onSnapshot(querySnapshot =>{
+  //     const data = querySnapshot.docs.map( doc => {
+  //       return {
+  //         id: doc.id,
+  //         ...doc.data()
+  //     }}) as ProductProps[]
+  //     setProducts(data);
+  //    })
+  //    return () =>subscribe()
+  // },[])
+
+  // useEffect(()=>{
+  //   const subscribe = firestore()
+  //    .collection('products')
+  //     .doc('H215IzxCYM84EStkABdZ')
+  //     .get()
+  //     .then( response => console.log ({
+  //       id: response.id,
+  //       ...response.data()
+  //     }) )
+  //     setProducts(response.data);
+  //  },[])
+
+
+  //filtros
+
   useEffect(()=>{
-    firestore()
-    .collection('products')
-     .onSnapshot(querySnapshot =>{
-      const data = querySnapshot.docs.map( doc => {
-        return {
-          id: doc.id,
-          ...doc.data()
-      }}) as ProductProps[]
-      setProducts(data);
-     })
-     return () =>subscribe()
-  },[])
+    const subscribe = firestore()
+     .collection('products')
+    //  .where('quantity','>',2)
+
+    // limite de cosulta
+      // .limit(3)
+
+      // ordernar
+      // .orderBy('description', 'desc')
+
+      // a obrigacao do uso do orderBy
+      .orderBy('quantity')
+      .startAt(4)//com  //startAfter depois , startBefore antes
+      .endAt(6)  //endAfter , endBefore
+
+      .onSnapshot(querySnapshot =>{
+       const data = querySnapshot.docs.map( doc => {
+         return {
+           id: doc.id,
+           ...doc.data()
+       }}) as ProductProps[]
+       setProducts(data);
+      })
+      return () =>subscribe()
+   },[])
+  
+
 
   return (
     <FlatList
